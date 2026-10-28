@@ -1,0 +1,19 @@
+; Standalone test project for the Racer Palm Asset Pack.
+; Only the racer_palms/ folder needs to be copied into your own game.
+
+config_version=5
+
+[application]
+
+config/name="Racer Palm Asset Pack"
+run/main_scene="res://racer_palms/demo/racer_palms_demo.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=2

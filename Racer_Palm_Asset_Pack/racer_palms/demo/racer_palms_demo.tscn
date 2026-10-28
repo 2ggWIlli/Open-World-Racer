@@ -1,0 +1,180 @@
+[gd_scene load_steps=20 format=3]
+
+[ext_resource type="PackedScene" path="res://racer_palms/scenes/racer_palm_coastal.tscn" id="p_coastal"]
+[ext_resource type="PackedScene" path="res://racer_palms/scenes/racer_palm_tall.tscn" id="p_tall"]
+[ext_resource type="PackedScene" path="res://racer_palms/scenes/racer_palm_windblown.tscn" id="p_windblown"]
+[ext_resource type="Script" path="res://racer_palms/scripts/racer_palms_wind.gd" id="s_wind"]
+[ext_resource type="Script" path="res://racer_palms/demo/racer_palms_demo_camera.gd" id="s_cam"]
+[ext_resource type="Shader" path="res://racer_palms/demo/racer_palms_demo_road.gdshader" id="sh_road"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+sky_top_color = Color(0.16, 0.4, 0.84, 1)
+sky_horizon_color = Color(0.62, 0.79, 0.95, 1)
+sky_curve = 0.12
+ground_bottom_color = Color(0.35, 0.42, 0.35, 1)
+ground_horizon_color = Color(0.62, 0.79, 0.95, 1)
+sun_angle_max = 20.0
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+ambient_light_energy = 1.0
+reflected_light_source = 2
+tonemap_mode = 2
+tonemap_white = 6.0
+ssao_enabled = true
+ssao_radius = 1.5
+ssao_intensity = 1.5
+glow_enabled = true
+glow_intensity = 0.4
+glow_bloom = 0.05
+fog_enabled = true
+fog_light_color = Color(0.68, 0.8, 0.94, 1)
+fog_density = 0.0015
+fog_sky_affect = 0.0
+adjustment_enabled = true
+adjustment_saturation = 1.12
+
+[sub_resource type="StandardMaterial3D" id="grass_mat"]
+albedo_color = Color(0.42, 0.64, 0.24, 1)
+roughness = 1.0
+
+[sub_resource type="PlaneMesh" id="grass_mesh"]
+material = SubResource("grass_mat")
+size = Vector2(700, 700)
+
+[sub_resource type="StandardMaterial3D" id="sand_mat"]
+albedo_color = Color(0.88, 0.79, 0.58, 1)
+roughness = 1.0
+
+[sub_resource type="PlaneMesh" id="sand_mesh"]
+material = SubResource("sand_mat")
+size = Vector2(30, 700)
+
+[sub_resource type="StandardMaterial3D" id="sea_mat"]
+albedo_color = Color(0.12, 0.62, 0.74, 1)
+roughness = 0.12
+metallic_specular = 0.7
+
+[sub_resource type="PlaneMesh" id="sea_mesh"]
+material = SubResource("sea_mat")
+size = Vector2(300, 700)
+
+[sub_resource type="ShaderMaterial" id="road_mat"]
+render_priority = 0
+shader = ExtResource("sh_road")
+
+[sub_resource type="PlaneMesh" id="road_mesh"]
+material = SubResource("road_mat")
+size = Vector2(9, 700)
+
+[node name="RacerPalmsDemo" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.64018, 0.58021, -0.50351, 0, 0.65542, 0.75526, 0.76822, -0.48351, 0.41959, 0, 30, 0)
+light_color = Color(1, 0.95, 0.85, 1)
+light_energy = 1.35
+shadow_enabled = true
+shadow_blur = 1.2
+directional_shadow_max_distance = 160.0
+
+[node name="PalmWind" type="Node" parent="."]
+script = ExtResource("s_wind")
+
+[node name="Ground" type="Node3D" parent="."]
+
+[node name="Grass" type="MeshInstance3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 150, -0.05, -50)
+mesh = SubResource("grass_mesh")
+
+[node name="Sand" type="MeshInstance3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, -0.02, -50)
+mesh = SubResource("sand_mesh")
+
+[node name="Sea" type="MeshInstance3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -186, -0.25, -50)
+cast_shadow = 0
+mesh = SubResource("sea_mesh")
+
+[node name="Road" type="MeshInstance3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -50)
+cast_shadow = 0
+mesh = SubResource("road_mesh")
+
+[node name="RoadPalms" type="Node3D" parent="."]
+
+[node name="RoadPalm01_Coastal" parent="RoadPalms" instance=ExtResource("p_coastal")]
+transform = Transform3D(0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, 0.98481, -7.5, 0, -6)
+
+[node name="RoadPalm02_Tall" parent="RoadPalms" instance=ExtResource("p_tall")]
+transform = Transform3D(0.18233, 0, 1.034, 0, 1.05, 0, -1.034, 0, 0.18233, -9, 0, -20)
+
+[node name="RoadPalm03_Coastal" parent="RoadPalms" instance=ExtResource("p_coastal")]
+transform = Transform3D(-0.84572, 0, -0.30782, 0, 0.9, 0, 0.30782, 0, -0.84572, -7, 0, -34)
+
+[node name="RoadPalm04_Windblown" parent="RoadPalms" instance=ExtResource("p_windblown")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -14, 0, -44)
+
+[node name="RoadPalm05_Tall" parent="RoadPalms" instance=ExtResource("p_tall")]
+transform = Transform3D(-0.72774, 0, 0.61065, 0, 0.95, 0, -0.61065, 0, -0.72774, -8.5, 0, -58)
+
+[node name="RoadPalm06_Coastal" parent="RoadPalms" instance=ExtResource("p_coastal")]
+transform = Transform3D(0.55, 0, -0.95263, 0, 1.1, 0, 0.95263, 0, 0.55, -7.5, 0, -74)
+
+[node name="RoadPalm07_Windblown" parent="RoadPalms" instance=ExtResource("p_windblown")]
+transform = Transform3D(-0.88633, 0, -0.15628, 0, 0.9, 0, 0.15628, 0, -0.88633, -16, 0, -12)
+
+[node name="RoadPalm08_Coastal" parent="RoadPalms" instance=ExtResource("p_coastal")]
+transform = Transform3D(0.67175, 0, 0.67175, 0, 0.95, 0, -0.67175, 0, 0.67175, 8, 0, -16)
+
+[node name="RoadPalm09_Tall" parent="RoadPalms" instance=ExtResource("p_tall")]
+transform = Transform3D(-0.70707, 0, -0.84265, 0, 1.1, 0, 0.84265, 0, -0.70707, 8.5, 0, -40)
+
+[node name="RoadPalm10_Coastal" parent="RoadPalms" instance=ExtResource("p_coastal")]
+transform = Transform3D(-0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, -0.5, 9, 0, -66)
+
+[node name="RoadPalm11_Windblown" parent="RoadPalms" instance=ExtResource("p_windblown")]
+transform = Transform3D(-1.034, 0, 0.18233, 0, 1.05, 0, -0.18233, 0, -1.034, -17, 0, -86)
+
+[node name="RoadPalm12_Tall" parent="RoadPalms" instance=ExtResource("p_tall")]
+transform = Transform3D(0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, 0.98481, -9, 0, -100)
+
+[node name="RoadPalm13_Coastal" parent="RoadPalms" instance=ExtResource("p_coastal")]
+transform = Transform3D(-0.15628, 0, -0.88633, 0, 0.9, 0, 0.88633, 0, -0.15628, 8, 0, -96)
+
+[node name="RoadPalm14_Coastal" parent="RoadPalms" instance=ExtResource("p_coastal")]
+transform = Transform3D(0, 0, 1.05, 0, 1.05, 0, -1.05, 0, 0, -8, 0, -122)
+
+[node name="Showcase" type="Node3D" parent="."]
+
+[node name="Single01_Coastal" parent="Showcase" instance=ExtResource("p_coastal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 60)
+
+[node name="Single02_Tall" parent="Showcase" instance=ExtResource("p_tall")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0, 60)
+
+[node name="Single03_Windblown" parent="Showcase" instance=ExtResource("p_windblown")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, 60)
+
+[node name="Lineup01_Coastal" parent="Showcase" instance=ExtResource("p_coastal")]
+transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, 31, 0, 140)
+
+[node name="Lineup02_Tall" parent="Showcase" instance=ExtResource("p_tall")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 140)
+
+[node name="Lineup03_Windblown" parent="Showcase" instance=ExtResource("p_windblown")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 0, 140)
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.99902, 0.00067906, 0.044182, 0, 0.99988, -0.015368, -0.044188, 0.015353, 0.99891, 1.8, 2.4, 12)
+fov = 55.0
+far = 1500.0
+current = true
+script = ExtResource("s_cam")

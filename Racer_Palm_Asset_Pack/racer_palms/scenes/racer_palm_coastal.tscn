@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="ArrayMesh" path="res://racer_palms/meshes/racer_palm_coastal.obj" id="1_lod0"]
+[ext_resource type="ArrayMesh" path="res://racer_palms/meshes/racer_palm_coastal_lod1.obj" id="2_lod1"]
+[ext_resource type="Material" path="res://racer_palms/materials/racer_palm_material.tres" id="3_mat"]
+
+[node name="RacerPalmCoastal" type="Node3D"]
+
+[node name="LOD0" type="MeshInstance3D" parent="."]
+material_override = ExtResource("3_mat")
+extra_cull_margin = 1.5
+visibility_range_end = 90.0
+visibility_range_end_margin = 8.0
+mesh = ExtResource("1_lod0")
+
+[node name="LOD1" type="MeshInstance3D" parent="."]
+material_override = ExtResource("3_mat")
+extra_cull_margin = 1.5
+visibility_range_begin = 90.0
+visibility_range_begin_margin = 8.0
+visibility_range_end = 700.0
+visibility_range_end_margin = 30.0
+mesh = ExtResource("2_lod1")
